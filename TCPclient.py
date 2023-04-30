@@ -11,7 +11,7 @@ from test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 50242
+    serverPort = 50241
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
@@ -44,42 +44,43 @@ def send():
         #print(test_message)
         print(sys.getsizeof(test_message))
 
-        public_key = "/home/braeden/School/CSE467-FinalReport/public.pem"
+        public_key = "/home/babooze/CSE467-FinalReport/private.pem"
         #encrypt message
         start_enc = time.time()
 
         if method.startswith("A"):
             key = aes_key_generation(32, "ChaCha20_Poly1305")
             mode =  "ChaCha20_Poly1305"
-            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         elif method.startswith("B"):
-            x = 1
             key = aes_key_generation(32, "AES-GCM")
             mode =  "AES-GCM"
-            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         elif method.startswith("C"):
-            x = 1
             key = aes_key_generation(16, "AES-GCM")
             mode =  "AES-GCM"
-            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         elif method.startswith("D"):
-            x = 1
             key = aes_key_generation(32, "AES-CBC")
             mode =  "AES-CBC"
-            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         elif method.startswith("E"):
-            x = 1
             key = aes_key_generation(24, "AES-CBC")
             mode =  "AES-CBC"
-            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         elif method.startswith("F"):
-            x = 1
             key = aes_key_generation(16, "AES-CBC")
             mode =  "AES-CBC"
-            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
+            enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
+            encrypted_message = encrypt_message( key, mode, test_message)
         end_enc = time.time()
         
-        enc_object = (encrypted_message, key, mode)
+        enc_object = (encrypted_message, enc_key, enc_mode)
 
         pickled = pickle.dumps(enc_object)
         start_send = time.time()
