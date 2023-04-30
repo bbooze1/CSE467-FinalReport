@@ -1,15 +1,16 @@
 from socket import *
 import sys
 import time 
+from encrypt_class import enc_object
 from block_ciphers.ciphers import *
 from block_ciphers.key_generation import *
 from block_ciphers.test import *
-
+import pickle
 def receive():
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
-    port = 40500                 # Reserve a port for your service.
+    port = 50240             # Reserve a port for your service.
     rec_soc.bind((host, port))        # Bind to the port
     rec_soc.listen(5)
     print("connected")
@@ -38,9 +39,10 @@ def receive():
         #message = message.decode()
         #method = message[0]
         print("done receiving", message)
-
+        unpickled = pickle.loads(message)
+        print(unpickled)
         start_dec = time.time()
-        decrypt_message("/home/braeden/School/CSE467-FinalReport/private.pem", message)
+        decrypt_message(unpickled[0], unpickled[1], unpickled[2])
         end_dec = time.time()
         dec_time = (str)(start_dec - end_dec)
         print(dec_time)

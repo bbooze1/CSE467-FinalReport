@@ -3,6 +3,7 @@ import sys
 import time #for timeing out if there is a halt, useful for debugging
 import random
 import pickle
+from encrypt_class import enc_object
 from block_ciphers.ciphers import *
 from block_ciphers.key_generation import *
 from block_ciphers.test import *
@@ -10,7 +11,7 @@ from block_ciphers.test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 40500
+    serverPort = 50240
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
@@ -70,12 +71,14 @@ def send():
             key = aes_key_generation(16, "AES-CBC")
             encrypted_message = encrypt_message(key, "AES-CBC", test_message)
         end_enc = time.time()
+        enc_object = (encrypted_message, key, "AES-CBC")
 
+        pickled = pickle.dumps(enc_object)
         start_send = time.time()
         print("sending")
         print(test_message)
         print("encrypted message", encrypted_message)
-        serverSocket.send(encrypted_message)
+        serverSocket.send(pickled)
         print("done sending")
         end_send = time.time()
 
