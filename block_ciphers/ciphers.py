@@ -1,8 +1,17 @@
+from typing import Tuple
+
+from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 
 
-def encrypt_message(public_rsa_file, aes_key, aes_mode, data):
+def encrypt_message(
+    public_rsa_file: str, 
+    aes_key: bytes, 
+    aes_mode: str, 
+    data: str,
+) -> bytes:
+    
     aes_mode = bytes(aes_mode, 'utf-8')
 
     public_key = RSA.import_key(open(public_rsa_file).read())
@@ -15,9 +24,16 @@ def encrypt_message(public_rsa_file, aes_key, aes_mode, data):
     if aes_mode == bytes("AES-GCM", 'utf-8'):
         nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
         return (enc_aes_mode + enc_aes_key + nonce + tag + ciphertext)
+    elif aes_mode == bytes("AES-CBC", "utf-8"):
+        iv, ciphertext = AES_CBC_encrypt(aes_key, data)
+        return (enc_aes_mode + enc_aes_key + iv + ciphertext)
 
 
-def decrypt_message(private_rsa_file, enc_data):
+def decrypt_message(
+    private_rsa_file: str, 
+    enc_data: bytes
+) -> str:
+
     byte_length = 16
 
     private_key = RSA.import_key(open(private_rsa_file).read())
@@ -29,23 +45,36 @@ def decrypt_message(private_rsa_file, enc_data):
     enc_aes_key = enc_data[0:private_key.size_in_bytes()]
     enc_data = enc_data[private_key.size_in_bytes():]
 
-    nonce = enc_data[0:byte_length]
-    enc_data = enc_data[byte_length:]
-
-    tag = enc_data[0:byte_length]
-    enc_data = enc_data[byte_length:]
-
-    ciphertext = enc_data
-
     aes_key = cipher_rsa.decrypt(enc_aes_key)
     aes_mode = cipher_rsa.decrypt(enc_aes_mode)
 
     if aes_mode == bytes("AES-GCM", 'utf-8'):
+        nonce = enc_data[0:byte_length]
+        enc_data = enc_data[byte_length:]
+
+        tag = enc_data[0:byte_length]
+        enc_data = enc_data[byte_length:]
+
+        ciphertext = enc_data
+
         plaintext = AES_GCM_decrypt(aes_key, nonce, tag, ciphertext)
         return plaintext
 
+    elif aes_mode == bytes("AES-CBC", 'utf-8'):
+        iv = enc_data[0:byte_length]
+        enc_data = enc_data[byte_length:]
 
-def AES_GCM_encrypt(aes_key, data):
+        ciphertext = enc_data
+
+        plaintext = AES_CBC_decrypt(aes_key, iv, ciphertext)
+        return plaintext
+
+
+def AES_GCM_encrypt(
+    aes_key: bytes, 
+    data: str
+) -> Tuple[bytes, bytes, bytes]:
+
     data = bytes(data, "utf-8")
 
     cipher_aes = AES.new(aes_key, AES.MODE_GCM)
@@ -55,8 +84,31 @@ def AES_GCM_encrypt(aes_key, data):
     return nonce, tag, ciphertext
 
 
-def AES_GCM_decrypt(aes_key, nonce, tag, ciphertext):
+def AES_GCM_decrypt(
+    aes_key: bytes, 
+    nonce: bytes, 
+    tag: bytes, 
+    ciphertext: bytes
+) -> str:
+
     cipher_aes = AES.new(aes_key, AES.MODE_GCM, nonce=nonce)
     plaintext = cipher_aes.decrypt_and_verify(ciphertext, tag)
 
     return plaintext.decode('utf-8')
+
+
+def AES_CBC_encrypt(aes_key: bytes, data: str) -> Tuple[bytes, bytes]:
+    data = bytes(data, "utf-8")
+
+    cipher_aes = AES.new(aes_key, AES.MODE_CBC)
+    ciphertext = cipher_aes.encrypt(pad(data, AES.block_size))
+    iv = cipher_aes.iv
+
+    return iv, ciphertext
+
+
+def AES_CBC_decrypt(aes_key: bytes, iv: bytes, ciphertext: bytes) -> str:
+    cipher_aes = AES.new(aes_key, AES.MODE_CBC, iv)
+    plaintext = unpad(cipher_aes.decrypt(ciphertext), AES.block_size)
+
+    return plaintext.decode("utf-8")
