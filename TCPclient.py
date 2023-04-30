@@ -11,7 +11,9 @@ from test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 50241
+
+    serverPort = 50243
+
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
@@ -53,6 +55,7 @@ def send():
             mode =  "ChaCha20_Poly1305"
             enc_key, enc_mode = encrypt_symmetric_key_mode(public_key, key, mode)
             encrypted_message = encrypt_message( key, mode, test_message)
+
         elif method.startswith("B"):
             key = aes_key_generation(32, "AES-GCM")
             mode =  "AES-GCM"

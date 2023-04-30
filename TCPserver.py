@@ -11,7 +11,9 @@ def receive():
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
-    port = 50241             # Reserve a port for your service.
+
+    port = 50243             # Reserve a port for your service.
+
     rec_soc.bind((host, port))        # Bind to the port
     rec_soc.listen(5)
     print("connected")
@@ -22,7 +24,7 @@ def receive():
         
         print("waiting")
 
-        buffer = c.recv(20480)
+        buffer = c.recv(2048)
         print(sys.getsizeof(buffer))
         print("receiving")
         message = b""
@@ -33,9 +35,9 @@ def receive():
             
             #2081
             print(sys.getsizeof(buffer))
-            if sys.getsizeof(buffer) == 20513:
+            if sys.getsizeof(buffer) == 2081:
                 
-                buffer = c.recv(20480)
+                buffer = c.recv(2048)
             else:
                 continue_loop = 0
             #print("buffer", buffer)
@@ -44,7 +46,7 @@ def receive():
         #method = message[0]
         #print("done receiving", message)
         unpickled = pickle.loads(message)
-        print(unpickled)
+        #print(unpickled)
         start_dec = time.time()
         aes_key, aes_mode = decrypt_symmetric_key_mode(private_key, unpickled[1], unpickled[2])
         decrypted_message = decrypt_message(unpickled[0], aes_key, aes_mode)
