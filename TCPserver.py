@@ -1,6 +1,9 @@
 from socket import *
 import sys
 import time 
+from block_ciphers.ciphers import *
+from block_ciphers.key_generation import *
+from block_ciphers.test import *
 
 def receive():
     print("started")
@@ -32,24 +35,12 @@ def receive():
                 continue_loop = 0
             print("buffer", buffer)
 
-        message = message.decode()
-        method = message[0]
+        #message = message.decode()
+        #method = message[0]
         print("done receiving", message)
 
         start_dec = time.time()
-
-        if method.startswith("A"):
-            x = 1
-        elif method.startswith("B"):
-            x = 1
-        elif method.startswith("C"):
-            x = 1
-        elif method.startswith("D"):
-            x = 1
-        elif method.startswith("E"):
-            x = 1
-        elif method.startswith("F"):
-            x = 1
+        decrypt_message("/home/braeden/School/CSE467-FinalReport/private.pem", message)
         end_dec = time.time()
         dec_time = (str)(start_dec - end_dec)
         print(dec_time)

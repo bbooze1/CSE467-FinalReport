@@ -1,5 +1,5 @@
-import ciphers
-import key_generation
+from block_ciphers.ciphers import *
+from block_ciphers.key_generation import *
 
 
 def AES_GCM_Test():
