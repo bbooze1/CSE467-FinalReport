@@ -11,12 +11,13 @@ def receive():
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
-    port = 50242             # Reserve a port for your service.
+    port = 50241             # Reserve a port for your service.
     rec_soc.bind((host, port))        # Bind to the port
     rec_soc.listen(5)
     print("connected")
     c, addr = rec_soc.accept()
     while True:
+        private_key = "/home/babooze/CSE467-FinalReport/private.pem"
         print("in true")
         
         print("waiting")
@@ -45,7 +46,8 @@ def receive():
         unpickled = pickle.loads(message)
         print(unpickled)
         start_dec = time.time()
-        decrypt_message(unpickled[0], unpickled[1], unpickled[2])
+        aes_key, aes_mode = decrypt_symmetric_key_mode(private_key, unpickled[1], unpickled[2])
+        decrypted_message = decrypt_message(unpickled[0], aes_key, aes_mode)
         end_dec = time.time()
         dec_time = (str)(end_dec - start_dec)
         print(dec_time)
