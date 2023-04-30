@@ -11,7 +11,7 @@ from test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 50242
+    serverPort = 50243
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
@@ -51,7 +51,7 @@ def send():
         if method.startswith("A"):
             key = aes_key_generation(32, "ChaCha20_Poly1305")
             mode =  "ChaCha20_Poly1305"
-            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
+            encrypted_message = encrypt_message( key, "ChaCha20_Poly1305", test_message)
         elif method.startswith("B"):
             x = 1
             key = aes_key_generation(32, "AES-GCM")
