@@ -1,8 +1,8 @@
 import ciphers
 import key_generation
 
-byte_length = 32
-aes_mode = "AES-256-GCM"
+byte_length = 16
+aes_mode = "AES-GCM"
 data = "This is a test"
 
 aes_key = key_generation.aes_key_generation(byte_length)

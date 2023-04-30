@@ -12,10 +12,9 @@ def encrypt_message(public_rsa_file, aes_key, aes_mode, data):
     enc_aes_key = cipher_rsa.encrypt(aes_key)
     enc_aes_mode = cipher_rsa.encrypt(aes_mode)
 
-    if aes_mode == bytes("AES-256-GCM", 'utf-8'):
-        nonce, tag, ciphertext = AES_256_GCM_encrypt(aes_key, data)
-
-    return (enc_aes_mode + enc_aes_key + nonce + tag + ciphertext)
+    if aes_mode == bytes("AES-GCM", 'utf-8'):
+        nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
+        return (enc_aes_mode + enc_aes_key + nonce + tag + ciphertext)
 
 
 def decrypt_message(private_rsa_file, enc_data):
@@ -41,13 +40,12 @@ def decrypt_message(private_rsa_file, enc_data):
     aes_key = cipher_rsa.decrypt(enc_aes_key)
     aes_mode = cipher_rsa.decrypt(enc_aes_mode)
 
-
-    if aes_mode == bytes("AES-256-GCM", 'utf-8'):
-        plaintext = AES_256_GCM_decrypt(aes_key, nonce, tag, ciphertext)
+    if aes_mode == bytes("AES-GCM", 'utf-8'):
+        plaintext = AES_GCM_decrypt(aes_key, nonce, tag, ciphertext)
         return plaintext
 
 
-def AES_256_GCM_encrypt(aes_key, data):
+def AES_GCM_encrypt(aes_key, data):
     data = bytes(data, "utf-8")
 
     cipher_aes = AES.new(aes_key, AES.MODE_GCM)
@@ -57,7 +55,7 @@ def AES_256_GCM_encrypt(aes_key, data):
     return nonce, tag, ciphertext
 
 
-def AES_256_GCM_decrypt(aes_key, nonce, tag, ciphertext):
+def AES_GCM_decrypt(aes_key, nonce, tag, ciphertext):
     cipher_aes = AES.new(aes_key, AES.MODE_GCM, nonce=nonce)
     plaintext = cipher_aes.decrypt_and_verify(ciphertext, tag)
 

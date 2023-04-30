@@ -3,6 +3,7 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
+
 def aes_key_generation(byte_length: int) -> bytes:
     # confirm that a 128, 192, or 256 bit key is being requested
     if byte_length != 16 and byte_length != 24 and byte_length != 32:
