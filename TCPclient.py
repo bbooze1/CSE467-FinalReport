@@ -11,7 +11,7 @@ from test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 50241
+    serverPort = 50240
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
@@ -53,31 +53,37 @@ def send():
         elif method.startswith("B"):
             x = 1
             key = aes_key_generation(32, "AES-GCM")
-            encrypted_message = encrypt_message(key, "AES-GCM", test_message)
+            mode =  "AES-GCM"
+            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
         elif method.startswith("C"):
             x = 1
             key = aes_key_generation(16, "AES-GCM")
-            encrypted_message = encrypt_message(key, "AES-GCM", test_message)
+            mode =  "AES-GCM"
+            encrypted_message = encrypt_message( key, "AES-GCM", test_message)
         elif method.startswith("D"):
             x = 1
             key = aes_key_generation(32, "AES-CBC")
-            encrypted_message = encrypt_message(key, "AES-CBC", test_message)
+            mode =  "AES-CBC"
+            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
         elif method.startswith("E"):
             x = 1
             key = aes_key_generation(24, "AES-CBC")
-            encrypted_message = encrypt_message(key, "AES-CBC", test_message)
+            mode =  "AES-CBC"
+            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
         elif method.startswith("F"):
             x = 1
             key = aes_key_generation(16, "AES-CBC")
-            encrypted_message = encrypt_message(key, "AES-CBC", test_message)
+            mode =  "AES-CBC"
+            encrypted_message = encrypt_message( key, "AES-CBC", test_message)
         end_enc = time.time()
-        enc_object = (encrypted_message, key, "AES-CBC")
+        
+        enc_object = (encrypted_message, key, mode)
 
         pickled = pickle.dumps(enc_object)
         start_send = time.time()
         print("sending")
-        print(test_message)
-        print("encrypted message", encrypted_message)
+        #print(test_message)
+        #print("encrypted message", encrypted_message)
         serverSocket.send(pickled)
         print("done sending")
         end_send = time.time()

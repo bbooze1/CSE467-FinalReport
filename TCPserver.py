@@ -11,7 +11,7 @@ def receive():
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
-    port = 50241             # Reserve a port for your service.
+    port = 50240             # Reserve a port for your service.
     rec_soc.bind((host, port))        # Bind to the port
     rec_soc.listen(5)
     print("connected")
@@ -27,7 +27,7 @@ def receive():
         message = b""
         continue_loop = 1
         while buffer and continue_loop:
-            print("in here")
+            #print("in here")
             message += buffer
             
             if sys.getsizeof(buffer) == 2081:
@@ -35,7 +35,7 @@ def receive():
                 buffer = c.recv(2048)
             else:
                 continue_loop = 0
-            print("buffer", buffer)
+            #print("buffer", buffer)
 
         #message = message.decode()
         #method = message[0]
@@ -45,7 +45,7 @@ def receive():
         start_dec = time.time()
         decrypt_message(unpickled[0], unpickled[1], unpickled[2])
         end_dec = time.time()
-        dec_time = (str)(start_dec - end_dec)
+        dec_time = (str)(end_dec - start_dec)
         print(dec_time)
         c.send(dec_time.encode())
 
