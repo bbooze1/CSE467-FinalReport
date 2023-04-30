@@ -46,10 +46,10 @@ def encrypt_message(
     data: str,
 ) -> bytes:
 
-    if aes_mode == bytes("AES-GCM", 'utf-8'):
+    if aes_mode == "AES-GCM".encode("utf-8"):
         nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
         return (nonce + tag + ciphertext)
-    elif aes_mode == bytes("AES-CBC", "utf-8"):
+    elif aes_mode == "AES-CBC".encode("utf-8"):
         iv, ciphertext = AES_CBC_encrypt(aes_key, data)
         return (iv + ciphertext)
 
@@ -62,7 +62,7 @@ def decrypt_message(
 
     byte_length = 16
 
-    if aes_mode == bytes("AES-GCM", 'utf-8'):
+    if aes_mode == "AES-GCM".encode("utf-8"):
         nonce = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
@@ -74,7 +74,7 @@ def decrypt_message(
         plaintext = AES_GCM_decrypt(aes_key, nonce, tag, ciphertext)
         return plaintext
 
-    elif aes_mode == bytes("AES-CBC", 'utf-8'):
+    elif aes_mode == "AES-CBC".encode("utf-8"):
         iv = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
@@ -89,7 +89,7 @@ def AES_GCM_encrypt(
     data: str
 ) -> Tuple[bytes, bytes, bytes]:
 
-    data = bytes(data, "utf-8")
+    data = data.encode("utf-8")
 
     cipher_aes = AES.new(aes_key, AES.MODE_GCM)
     ciphertext, tag = cipher_aes.encrypt_and_digest(data)
@@ -112,7 +112,7 @@ def AES_GCM_decrypt(
 
 
 def AES_CBC_encrypt(aes_key: bytes, data: str) -> Tuple[bytes, bytes]:
-    data = bytes(data, "utf-8")
+    data = data.encode("utf-8")
 
     cipher_aes = AES.new(aes_key, AES.MODE_CBC)
     ciphertext = cipher_aes.encrypt(pad(data, AES.block_size))
