@@ -1,5 +1,3 @@
 class enc_object(object):
-    def __init__(self, new_key, new_mode, new_data):
-        self.aes_key = new_key
-        self.mode = new_mode
-        self.data = new_data
+    def __init__(self, new_enc_data):
+        self.enc_data = new_enc_data
