@@ -5,7 +5,7 @@ import random
 import pickle
 from block_ciphers.ciphers import *
 from block_ciphers.key_generation import *
-from block_ciphers.test import *
+from test import *
 
 def send():
     time.sleep(0.1)

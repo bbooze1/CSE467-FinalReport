@@ -3,7 +3,7 @@ import sys
 import time 
 from block_ciphers.ciphers import *
 from block_ciphers.key_generation import *
-from block_ciphers.test import *
+from test import *
 
 def receive():
     print("started")

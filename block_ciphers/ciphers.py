@@ -23,16 +23,12 @@ def encrypt_symmetric_key_mode(
 
 def decrypt_symmetric_key_mode(
     private_rsa_file: str, 
-    enc_data: bytes
+    enc_aes_key: bytes, 
+    enc_aes_mode: bytes,
 ) -> str:
 
     private_key = RSA.import_key(open(private_rsa_file).read())
     cipher_rsa = PKCS1_OAEP.new(private_key)
-
-    enc_aes_key = enc_data[0:private_key.size_in_bytes()]
-    enc_data = enc_data[private_key.size_in_bytes():]
-
-    enc_aes_mode = enc_data
 
     aes_key = cipher_rsa.decrypt(enc_aes_key)
     aes_mode = cipher_rsa.decrypt(enc_aes_mode)
