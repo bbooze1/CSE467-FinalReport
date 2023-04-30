@@ -18,7 +18,7 @@ def aes_key_generation(
     Returns:
         A key of type byte that's been hashed using SHA256
     """
-    aes_mode = aes_mode.decode()
+    aes_mode = aes_mode
     # confirm that a 128, 192, or 256 bit key is being requested
     if byte_length != 16 and byte_length != 24 and byte_length != 32:
         return "can only compute a 16, 24, or 32 byte key"
