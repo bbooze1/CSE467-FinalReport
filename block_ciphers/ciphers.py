@@ -16,7 +16,7 @@ def encrypt_symmetric_key_mode(
     cipher_rsa = PKCS1_OAEP.new(public_key)
 
     enc_aes_key = cipher_rsa.encrypt(aes_key)
-    enc_aes_mode = cipher_rsa.encrypt(aes_mode)
+    enc_aes_mode = cipher_rsa.encrypt(aes_mode.encode())
 
     return enc_aes_key, enc_aes_mode
 
