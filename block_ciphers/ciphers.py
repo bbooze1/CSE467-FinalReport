@@ -18,7 +18,7 @@ def encrypt_symmetric_key_mode(
     enc_aes_key = cipher_rsa.encrypt(aes_key)
     enc_aes_mode = cipher_rsa.encrypt(aes_mode)
 
-    return enc_aes_key + enc_aes_mode
+    return enc_aes_key, enc_aes_mode
 
 
 def decrypt_symmetric_key_mode(
@@ -37,7 +37,7 @@ def decrypt_symmetric_key_mode(
     aes_key = cipher_rsa.decrypt(enc_aes_key)
     aes_mode = cipher_rsa.decrypt(enc_aes_mode)
 
-    return aes_key, aes_mode
+    return aes_key, aes_mode.decode()
 
 
 def encrypt_message(
@@ -46,10 +46,10 @@ def encrypt_message(
     data: str,
 ) -> bytes:
 
-    if aes_mode == "AES-GCM".encode():
+    if aes_mode == "AES-GCM":
         nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
         return (nonce + tag + ciphertext)
-    elif aes_mode == "AES-CBC".encode():
+    elif aes_mode == "AES-CBC":
         iv, ciphertext = AES_CBC_encrypt(aes_key, data)
         return (iv + ciphertext)
 
@@ -62,7 +62,7 @@ def decrypt_message(
 
     byte_length = 16
 
-    if aes_mode == "AES-GCM".encode():
+    if aes_mode == "AES-GCM":
         nonce = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
@@ -74,7 +74,7 @@ def decrypt_message(
         plaintext = AES_GCM_decrypt(aes_key, nonce, tag, ciphertext)
         return plaintext
 
-    elif aes_mode == "AES-CBC".encode():
+    elif aes_mode == "AES-CBC":
         iv = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
