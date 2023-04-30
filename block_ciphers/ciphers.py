@@ -5,14 +5,11 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 
 
-def encrypt_message(
+def encrypt_symmetric_key_mode(
     public_rsa_file: str, 
     aes_key: bytes, 
-    aes_mode: str, 
-    data: str,
+    aes_mode: bytes,
 ) -> bytes:
-    
-    aes_mode = aes_mode.encode()
 
     public_key = RSA.import_key(open(public_rsa_file).read())
 
@@ -21,34 +18,47 @@ def encrypt_message(
     enc_aes_key = cipher_rsa.encrypt(aes_key)
     enc_aes_mode = cipher_rsa.encrypt(aes_mode)
 
-    if aes_mode == "AES-GCM".encode():
-        nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
-        return (enc_aes_mode + enc_aes_key + nonce + tag + ciphertext)
-    elif aes_mode == "AES-CBC".encode():
-        iv, ciphertext = AES_CBC_encrypt(aes_key, data)
-        return (enc_aes_mode + enc_aes_key + iv + ciphertext)
+    return enc_aes_key, enc_aes_mode
 
 
-def decrypt_message(
+def decrypt_symmetric_key_mode(
     private_rsa_file: str, 
-    enc_data: bytes
+    enc_aes_key: bytes, 
+    enc_aes_mode: bytes,
 ) -> str:
-
-    byte_length = 16
 
     private_key = RSA.import_key(open(private_rsa_file).read())
     cipher_rsa = PKCS1_OAEP.new(private_key)
 
-    enc_aes_mode = enc_data[0:private_key.size_in_bytes()]
-    enc_data = enc_data[private_key.size_in_bytes():]
-    
-    enc_aes_key = enc_data[0:private_key.size_in_bytes()]
-    enc_data = enc_data[private_key.size_in_bytes():]
-
     aes_key = cipher_rsa.decrypt(enc_aes_key)
     aes_mode = cipher_rsa.decrypt(enc_aes_mode)
 
-    if aes_mode == "AES-GCM".encode:
+    return aes_key, aes_mode.decode()
+
+
+def encrypt_message(
+    aes_key: bytes, 
+    aes_mode: bytes, 
+    data: str,
+) -> bytes:
+
+    if aes_mode == "AES-GCM":
+        nonce, tag, ciphertext = AES_GCM_encrypt(aes_key, data)
+        return (nonce + tag + ciphertext)
+    elif aes_mode == "AES-CBC":
+        iv, ciphertext = AES_CBC_encrypt(aes_key, data)
+        return (iv + ciphertext)
+
+
+def decrypt_message(
+    enc_data: bytes,
+    aes_key: bytes,
+    aes_mode: bytes,
+) -> str:
+
+    byte_length = 16
+
+    if aes_mode == "AES-GCM":
         nonce = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
@@ -60,7 +70,7 @@ def decrypt_message(
         plaintext = AES_GCM_decrypt(aes_key, nonce, tag, ciphertext)
         return plaintext
 
-    elif aes_mode == "AES-CBC".encode():
+    elif aes_mode == "AES-CBC":
         iv = enc_data[0:byte_length]
         enc_data = enc_data[byte_length:]
 
