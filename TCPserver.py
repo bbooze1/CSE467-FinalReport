@@ -4,13 +4,14 @@ import time
 from encrypt_class import enc_object
 from block_ciphers.ciphers import *
 from block_ciphers.key_generation import *
-from block_ciphers.test import *
+from test import *
+
 import pickle
 def receive():
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
-    port = 50240             # Reserve a port for your service.
+    port = 50241             # Reserve a port for your service.
     rec_soc.bind((host, port))        # Bind to the port
     rec_soc.listen(5)
     print("connected")

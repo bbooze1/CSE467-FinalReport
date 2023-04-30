@@ -11,7 +11,7 @@ from test import *
 def send():
     time.sleep(0.1)
     serverName = 'localhost'
-    serverPort = 50240
+    serverPort = 50241
     serverSocket = socket()
     serverSocket.connect((serverName, serverPort))
     open = 1
