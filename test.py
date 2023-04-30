@@ -9,11 +9,11 @@ def AES_GCM_Test():
     plaintexts = ["This is a AES-128-GCM test", "This is a AES-256-GCM test"]
 
     for byte_length, data in zip(byte_lengths, plaintexts):
-        aes_key = key_generation.aes_key_generation(byte_length, aes_mode)
+        aes_key = aes_key_generation(byte_length, aes_mode)
 
-        enc_data = ciphers.encrypt_message("public.pem", aes_key, aes_mode, data)
+        enc_data = encrypt_message("public.pem", aes_key, aes_mode, data)
 
-        plaintext = ciphers.decrypt_message("private.pem", enc_data)
+        plaintext = decrypt_message("private.pem", enc_data)
         assert plaintext == data
 
 
