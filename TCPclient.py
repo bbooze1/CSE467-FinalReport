@@ -2,6 +2,9 @@ from socket import *
 import sys
 import time #for timeing out if there is a halt, useful for debugging
 import random
+from block_ciphers.ciphers import *
+from block_ciphers.key_generation import *
+from block_ciphers.test import *
 
 def send():
     time.sleep(0.1)
@@ -39,6 +42,7 @@ def send():
         #print(test_message)
         print(sys.getsizeof(test_message))
 
+        public_key = "/home/braeden/School/CSE467-FinalReport/public.pem"
         #encrypt message
         start_enc = time.time()
 
@@ -46,20 +50,30 @@ def send():
             x = 1
         elif method.startswith("B"):
             x = 1
+            key = aes_key_generation(32, "AES-GCM")
+            encrypted_message = encrypt_message(public_key, key, "AES-GCM", test_message)
         elif method.startswith("C"):
             x = 1
+            key = aes_key_generation(16, "AES-GCM")
+            encrypted_message = encrypt_message(public_key, key, "AES-GCM", test_message)
         elif method.startswith("D"):
             x = 1
+            key = aes_key_generation(32, "AES-CBC")
+            encrypted_message = encrypt_message(public_key, key, "AES-CBC", test_message)
         elif method.startswith("E"):
             x = 1
+            key = aes_key_generation(24, "AES-CBC")
+            encrypted_message = encrypt_message(public_key, key, "AES-CBC", test_message)
         elif method.startswith("F"):
             x = 1
+            key = aes_key_generation(16, "AES-CBC")
+            encrypted_message = encrypt_message(public_key, key, "AES-CBC", test_message)
         end_enc = time.time()
 
         start_send = time.time()
         print("sending")
         print(test_message)
-        serverSocket.send((method[0] + test_message).encode())
+        serverSocket.send(encrypted_message)
         print("done sending")
         end_send = time.time()
 
