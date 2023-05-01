@@ -12,8 +12,9 @@ def aes_key_generation(
 
     Args:
         byte_length: The amount of bytes you want the key to be
-            Valid numbers are 16, 24, and 32. If using 24 bytes you can only use AES-CBC
-        aes_mode: a string denoting whether AES-GCM or AES-CBC is being used
+            Valid numbers are 16, 24, and 32. If using 24 bytes you can only use AES-CBC.
+            ChaCha20_Poly1305 can only use 32 bytes
+        aes_mode: a string denoting whether AES-GCM, AES-CBC, or ChaCha20_Poly1305 is being used
 
     Returns:
         A key of type byte that's been hashed using SHA256
