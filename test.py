@@ -3,10 +3,18 @@ from block_ciphers.key_generation import *
 from encrypt_class import enc_object
 
 
-def AES_GCM_Test():
+def Test():
+    """Tests the validity of chosen symmetric encryption method
+
+    Args:
+        aes_mode: encryption method you want to test. Options are AES-GCM, AES-CBC, or ChaCha20_Poly1305
+    Returns:
+        None
+    """
+
     byte_lengths = [32]
-    aes_mode = "ChaCha20_Poly1305".encode()
-    plaintexts = ["T"]
+    aes_mode = "ChaCha20_Poly1305"
+    plaintexts = ["Test"]
 
 
     for byte_length, data in zip(byte_lengths, plaintexts):
@@ -25,12 +33,13 @@ def AES_GCM_Test():
 
             # receiver will decrypt the message using the symmetric key and specified encryption algorithm
             plaintext = decrypt_message(enc_data, aes_key, new_aes_mode)
+        print(plaintext)
         assert plaintext == data
 
 
-if __name__ == "__main__":
-    # every time a new session is started first generate a new asymmetric key pair
-    # The public key should be shared with the sender while the private key stays with the receiver
-    message = generate_rsa_keys()
-    print(message)
-    AES_GCM_Test()
+# if __name__ == "__main__":
+#     # every time a new session is started first generate a new asymmetric key pair
+#     # The public key should be shared with the sender while the private key stays with the receiver
+#     message = generate_rsa_keys()
+#     print(message)
+#     Test()
