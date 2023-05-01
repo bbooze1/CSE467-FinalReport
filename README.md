@@ -22,7 +22,3 @@ The ciphers are ran across a basic peer to peer network using TCP. The symmetric
 * ```TCPserver.py``` must be running in the background before ```TCPclient.py``` can be ran.
 * Once both are running you will be able to specify the symmetric encryption method you wish to use and the amount of kilobytes of data you wish to send.
 * The data will then be encrypted, sent to the server, and decrypted.
-
-# Documentation
-Link
-
