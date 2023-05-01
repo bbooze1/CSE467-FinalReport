@@ -9,6 +9,14 @@ from block_ciphers.key_generation import *
 from test import *
 
 def send():
+    """Client that encrypts and sends message to the server.
+        Must be started after the server.
+
+    Args:
+        None
+    Returns:
+        None
+    """
     time.sleep(0.1)
     serverName = 'localhost'
 

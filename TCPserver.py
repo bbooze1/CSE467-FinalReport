@@ -8,6 +8,15 @@ from test import *
 
 import pickle
 def receive():
+    """Server that receive and decrypts the message sent from the client.
+        It must be started before the client can start.
+
+    Args:
+        None
+    Returns:
+        None
+    """
+
     print("started")
     rec_soc = socket() # Create a socket object
     host = "localhost" # Get local machine name
